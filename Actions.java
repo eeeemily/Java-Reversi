@@ -1,20 +1,26 @@
 public class Actions {
-
+    State currentState;
     int boardSize;
     // char [][] possibleActions;
     int[] possibleActionsI;
     int[] possibleActionsJ;
+    int[] numFlips;
+
     int numActions; // posible
     boolean xTurn;
     boolean oTurn;
     char opponentColor;
     char currentColor;
     int north, west, south, east, nw, ne, sw, se; // number of opponent pieces can be flipped in each of the 8
-                                                  // directions
+                                                  // directions; actually, might just loop through each cell agin and
+                                                  // substract from current state; nvm, lemme still do this way
 
     public Actions(State s, char whoseTurn) {
+        currentState = s;
         possibleActionsI = new int[64];
         possibleActionsJ = new int[64];
+        numFlips = new int[64];
+
         numActions = 0;
         boardSize = s.getSize();
         north = west = south = east = nw = ne = sw = se = 0;
@@ -37,12 +43,12 @@ public class Actions {
         // s[i][j] goes through each cell on the board
         for (int i = 0; i < boardSize; i++) { // get < size
             for (int j = 0; j < boardSize; j++) {
+                north = west = south = east = nw = ne = sw = se = 0; // reset
                 // filter 1: find the empty spot
                 if (s.gameState[i][j] == '-') { // see if whole board is x's and o's
                     // filter 2: do neighbor test to see if the current spot has any of the opposite
-                    // piece
                     if (neighborTest(s, i, j)) {
-                        j += 1;
+                        numFlips[numActions] = north + south + west + east + nw + ne + sw + se;
                         addActions(i, j);
                     }
                 }
@@ -57,9 +63,14 @@ public class Actions {
     }
 
     public void printActions() {
+        System.out.println("Current player: " + currentColor);
+        System.out.println("Total Legal Moves: " + numActions);
         for (int i = 0; i < numActions; i++) {
-            System.out.print("The " + i + " possible action is: ");
-            System.out.println(possibleActionsI[i] + possibleActionsJ[i]);
+            System.out.print("The " + (i + 1) + " possible action is: ");
+            System.out.print(State.getCharRow(possibleActionsI[i]));
+            System.out.print((possibleActionsJ[i] + 1));
+            System.out.println(";   Number of Pieces can be flipped in this move: " + numFlips[i]);
+
         }
     }
 
@@ -85,8 +96,9 @@ public class Actions {
             for (int a = (i - 2); a >= 0; a--) {
                 if (state.gameState[a][j] == '-')
                     return false;
+
                 if (state.gameState[a][j] == currentColor) {
-                    north = a;
+                    north += 1;
                     return true;
                 }
             }
@@ -106,7 +118,7 @@ public class Actions {
                 if (state.gameState[a][j] == '-')
                     return false;
                 if (state.gameState[a][j] == currentColor) {
-                    south = a;
+                    south += 1;
                     return true;
                 }
             }
@@ -115,7 +127,7 @@ public class Actions {
     }
 
     public boolean West(State state, int i, int j) {
-        // top: i[0 to i-2]; j stays
+        // top: i stays; j[0 to i-2]
         if (j == 0 || j == 1)
             return false;
 
@@ -126,7 +138,7 @@ public class Actions {
                 if (state.gameState[i][a] == '-')
                     return false;
                 if (state.gameState[i][a] == currentColor) {
-                    west = a;
+                    west += 1;
                     return true;
                 }
             }
@@ -146,7 +158,7 @@ public class Actions {
                 if (state.gameState[i][a] == '-')
                     return false;
                 if (state.gameState[i][a] == currentColor) {
-                    east = a;
+                    east += 1;
                     return true;
                 }
             }
@@ -155,9 +167,8 @@ public class Actions {
     }
 
     public boolean NW(State state, int i, int j) {
-        // diagonal, i=j
+        // diagonal, i=j; otherwise, the spot is not at the diagonal position
         if (i != j) {
-            System.out.println("NW got a problem, i=" + i + " ; j=" + j);
             return false;
         }
         //
@@ -171,7 +182,7 @@ public class Actions {
                 if (state.gameState[a][a] == '-')
                     return false;
                 if (state.gameState[a][a] == currentColor) {
-                    nw = a;
+                    nw += 1;
                     return true;
                 }
             }
@@ -180,9 +191,8 @@ public class Actions {
     }
 
     public boolean SE(State state, int i, int j) {
-        // diagonal, i=j
+        // diagonal, i=j; otherwise, the spot is not at the diagonal position
         if (i != j) {
-            System.out.println("SE got a problem, i=" + i + " ; j=" + j);
             return false;
         }
         //
@@ -196,7 +206,7 @@ public class Actions {
                 if (state.gameState[a][a] == '-')
                     return false;
                 if (state.gameState[a][a] == currentColor) {
-                    ne = a;
+                    ne += 1;
                     return true;
                 }
             }
@@ -205,9 +215,8 @@ public class Actions {
     }
 
     public boolean NE(State state, int i, int j) {
-        // diagonal, i+j=boardSize
-        if ((i + j) != boardSize) {
-            System.out.println("NE got a problem, i+j should=boardSize; but i=" + i + " ; j=" + j);
+        // diagonal, i+j=boardSize, otherwise, the spot is not at the diagonal position
+        if ((i + j + 1) != boardSize) {
             return false;
         }
         //
@@ -221,7 +230,7 @@ public class Actions {
                 if (state.gameState[a][boardSize - a] == '-')
                     return false;
                 if (state.gameState[a][boardSize - a] == currentColor) {
-                    ne = a;
+                    ne += 1;
                     return true;
                 }
             }
@@ -230,9 +239,9 @@ public class Actions {
     }
 
     public boolean SW(State state, int i, int j) {
-        // diagonal, i+j=boardSize
-        if ((i + j) != boardSize) {
-            System.out.println("SW got a problem, i+j should=boardSize; but i=" + i + " ; j=" + j);
+        // diagonal, i+j=boardSize; otherwise, the spot is not at the diagonal position
+        if ((i + j + 1) != boardSize) {
+
             return false;
         }
         //
@@ -246,7 +255,7 @@ public class Actions {
                 if (state.gameState[a][boardSize - a] == '-')
                     return false;
                 if (state.gameState[a][boardSize - a] == currentColor) {
-                    sw = a;
+                    sw += 1;
                     return true;
                 }
             }

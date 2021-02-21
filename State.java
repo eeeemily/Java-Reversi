@@ -68,6 +68,29 @@ public class State {
         State.player = player;
     }
 
+    public static char getCharRow(int row) {
+        switch (row) {
+            case 0:
+                return 'a';
+            case 1:
+                return 'b';
+            case 2:
+                return 'c';
+            case 3:
+                return 'd';
+            case 4:
+                return 'e';
+            case 5:
+                return 'f';
+            case 6:
+                return 'g';
+            case 7:
+                return 'h';
+            default:
+                return 100;
+        }
+    }
+
     public static int getRow(char row) {
         switch (row) {
             case 'a':
