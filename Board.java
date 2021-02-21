@@ -1,13 +1,13 @@
 public class Board {
     int size;
-    static char player;
+    char player;
     char ai;
     char [][] gameBoard;
     boolean aiTurn; // true = ai's turn, false = human's turn
 
     public Board (int size, char player){
         this.size = size;
-        Board.player = player;
+        this.player = player;
         
         if (player == 'x'){
             this.ai = 'o';
@@ -65,7 +65,7 @@ public class Board {
     }
 
     public void setPlayer(char player){ //will never need to set player
-        Board.player = player;
+        this.player = player;
     }
 
     public static int getRow(char row){
