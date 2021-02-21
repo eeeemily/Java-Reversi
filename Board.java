@@ -1,18 +1,20 @@
 public class Board {
     int size;
-    char player;
+    static char player;
     char ai;
-    int score;
     char [][] gameBoard;
+    boolean aiTurn; // true = ai's turn, false = human's turn
 
     public Board (int size, char player){
         this.size = size;
-        this.player = player;
+        Board.player = player;
         
         if (player == 'x'){
             this.ai = 'o';
+            aiTurn = false;
         }else {
             this.ai = 'x';
+            aiTurn = true;
         }
 
         if (size == 4){
@@ -53,6 +55,7 @@ public class Board {
     public int getSize(){
         return size;
     }
+    
     public void setSize(int size){
         this.size = size;
     }
@@ -61,8 +64,8 @@ public class Board {
         return player;
     }
 
-    public void setPlayer(char player){
-        this.player = player;
+    public void setPlayer(char player){ //will never need to set player
+        Board.player = player;
     }
 
     public static int getRow(char row){
@@ -117,4 +120,10 @@ public class Board {
             System.out.print("  a b c d e f g h \n");
         }
     }
+
+    public char[][] getGameBoard() {
+        return gameBoard;
+    }
+
+
 }
