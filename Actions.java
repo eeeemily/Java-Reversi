@@ -42,6 +42,7 @@ public class Actions {
                     // filter 2: do neighbor test to see if the current spot has any of the opposite
                     // piece
                     if (neighborTest(s, i, j)) {
+                        j += 1;
                         addActions(i, j);
                     }
                 }
