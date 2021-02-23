@@ -153,12 +153,16 @@ public class Action {
         return "" + State.getCharRow(j) + (i + 1);
     }
 
-    public State flip(State s, String move, char curPlayer) {
-        System.out.println("Row: " + s.getRow(move.charAt(0)));
-        System.out.println("Column: " + s.getCol(Character.getNumericValue(move.charAt(1))));
-        s.gameState[s.getRow(move.charAt(0))][s.getCol(Character.getNumericValue(move.charAt(1)))] = curPlayer;
+    public State addMove(State s, String move, char CurPlayer) {
+        int[] m = convertToBoard(move);
+        s.gameState[m[0]][m[1]] = CurPlayer;
+        System.out.println("adding a Move: " + move);
+        return s;
+    }
 
+    public State flip(State s, String move, char curPlayer) {
         boardSize = s.getSize();
+        s = addMove(s, move, curPlayer);
         // for func flip
         flippable = new String[64]; // put all flippeable pieces in a array
         flippablePieces = 0; // count how many pieces can be flipped
@@ -344,12 +348,15 @@ public class Action {
 
         // if the cell on top of the current one is opponent's Color, continue the test
         if (state.gameState[i - 1][j - 1] == opponentColor) {
+            System.out.println("debugging: " + flippablePieces);
             flippable[flippablePieces] = convertToMove(i - 1, j - 1);
             int tempFlip = 1;
             flippablePieces += tempFlip;
             // if there's a cell of the current color again, it is a legal move
             int b = j - 2;
             for (int a = (i - 2); a >= 0; a--) {
+                if (a == boardSize)
+                    return false;
                 if (state.gameState[a][b] == '-') {
                     flippablePieces -= tempFlip;
                     return false;

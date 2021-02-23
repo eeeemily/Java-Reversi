@@ -37,9 +37,7 @@ public class Game {
             player_turn = 'x';
         }
 
-        
         if (turn == ai_turn) {
-           
             int v = Integer.MIN_VALUE;
             String best = null;
             // a.getAction(state, max_value(state)); // gets the best action
@@ -56,7 +54,6 @@ public class Game {
                 }
             } 
             return best;
-            
         } else {
             // a.getAction(state, min_value(state));
             min_value(state);
