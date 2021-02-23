@@ -30,31 +30,31 @@ public class Main {
         // Action move = new Action(b, b.ai);
         Game g = new Game(); // initialize game
 
-        if ((b.ai == 'x') && (move.numActions != 0)) {
+        if ((b.ai == 'x') && (move.numActions != 0)) { //AI MOVES FIRST
             // g.minimax_decision(b);
-        } else {
-            //BEGIN HERE
-            System.out.println("-----------------------------");
-            System.out.print("Your move (? for help): ");
-            String location = scan.next();
+        } else { //PLAYER MOVES FIRST
+            // while (move.hasPossibleAction(b, player) == true){
+                System.out.println("-----------------------------");
+                System.out.print("Your move (? for help): ");
+                String location = scan.next();
             // if (location.equals("?")) {
                 move.printActions();
-            System.out.println("-----------------------------");
+                System.out.println("-----------------------------");
             // } else {
                 // 1. x
                 System.out.println("location is " + move.isPossibleAction(location));
                 System.out.println("location: " + location);
                 while (!move.isPossibleAction(location)) {
-                    System.out.println("please enter one of the possible moves: ");
-                    System.out.println("move is possible?: " + move.isPossibleAction(location));
+                    // System.out.println("please enter one of the possible moves: ");
+                    // System.out.println("move is possible?: " + move.isPossibleAction(location));
                     move.printActions();
                     location = scan.next();
                 }
                 b = b.updateState(b, 'x', location);
-
-              
-                // g.minimax_decision(newState, 'o'); // 'o' is AI's role
-
+                System.out.println("-----------------RANDOM AGENT PLAYING----------------");
+                g.RandomAgent(b, 'o');
+            // }
+            
             }
         }
 

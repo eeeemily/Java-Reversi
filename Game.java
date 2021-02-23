@@ -1,3 +1,4 @@
+import java.util.Random;
 public class Game {
     /*
      * initialize state, makes a board, decides who's turn is it, call the
@@ -106,6 +107,17 @@ public class Game {
             // v = Math.min(v, max_value(Result(s, a)));
         }
         return v;
+    }
+
+    public void RandomAgent(State s, char turn) {
+        Action move = new Action(s, turn);
+        Random rand = new Random();
+        if(move.numActions == 0){
+            System.out.println("No moves.");
+        }else {
+            int rand_move = rand.nextInt(move.numActions);
+            s.updateState(s, turn, move.possibleActionsString[rand_move]);
+        }
     }
 
     boolean terminalTest(State b) {
