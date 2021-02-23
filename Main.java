@@ -24,20 +24,24 @@ public class Main {
         /* prints board */
         State b = new State(size, player);
         b.printState(b.gameState);
-       
-        Action move = new Action(b, player);  //initialize player action
-        // Action move = new Action(b, b.ai);
-        Game g = new Game();  //initialize game 
 
-        if ((b.ai == 'x') && (move.numActions != 0)){
-            g.minimax_decision(b);
-        }else{
+        Action move = new Action(b, player); // initialize player action
+        // Action move = new Action(b, b.ai);
+        Game g = new Game(); // initialize game
+
+        if ((b.ai == 'x') && (move.numActions != 0)) {
+            // g.minimax_decision(b);
+        } else {
             System.out.println("Your move (? for help): ");
             String location = scan.next();
-            if (location.equals("?")){
+            if (location.equals("?")) {
                 move.printActions();
-            }else {
+            } else {
                 System.out.println("location is " + move.isPossibleAction(location));
+                // result(current, action): return a new state [?which class should i put it
+                // tho?]
+                State newState = b.updateState(b, player, location);
+                g.minimax_decision(newState, 'o'); // 'o' is AI's role
             }
         }
 

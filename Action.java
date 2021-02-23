@@ -2,8 +2,9 @@ public class Action {
     State currentState;
     int boardSize;
     // char [][] possibleActions;
-    int[] possibleActionsI;
+    int[] possibleActionsI; // can be removed?
     int[] possibleActionsJ;
+    String[] possibleActionsString; // Emily: maybe we should stick to this String array?
     int[] numFlips;
 
     int numActions; // posible
@@ -19,6 +20,7 @@ public class Action {
         currentState = s;
         possibleActionsI = new int[64];
         possibleActionsJ = new int[64];
+        possibleActionsString = new String[64];
         numFlips = new int[64];
 
         numActions = 0;
@@ -62,6 +64,7 @@ public class Action {
     public void addActions(int i, int j) {
         possibleActionsI[numActions] = i;
         possibleActionsJ[numActions] = j;
+        possibleActionsString[numActions] = "" + State.getCharRow(i) + (j + 1);
         numActions += 1;
     }
 
@@ -70,28 +73,38 @@ public class Action {
         System.out.println("Total Legal Moves: " + numActions);
         for (int i = 0; i < numActions; i++) {
             System.out.print("The " + (i + 1) + " possible action is: ");
-            System.out.print(State.getCharRow(possibleActionsI[i]));
-            System.out.print((possibleActionsJ[i] + 1));
+            // System.out.print(State.getCharRow(possibleActionsI[i]));
+            // System.out.println((possibleActionsJ[i] + 1));
+            System.out.print(possibleActionsString[i]);
             System.out.println(";   Number of Pieces can be flipped in this move: " + numFlips[i]);
 
         }
     }
 
-    //check if the input(string like a4) is a possible move 
-    public boolean isPossibleAction(String s){
+    // check if the input(string like a4) is a possible move
+    public boolean isPossibleAction(String s) {
         for (int i = 0; i < numActions; i++) {
-           if(State.getCharRow(possibleActionsI[i]) == (s.charAt(0))) {
-                if ((possibleActionsJ[i] + 1) == Character.getNumericValue(s.charAt(1))){
+            if (State.getCharRow(possibleActionsI[i]) == (s.charAt(0))) {
+                if ((possibleActionsJ[i] + 1) == Character.getNumericValue(s.charAt(1))) {
                     return true;
                 }
-           }
+            }
         }
         return false;
     }
 
-    public Action getAction(State state, int value){
-        
+    public boolean hasPossibleAction(State s, char curPlayer) {
+        Action a = new Action(s, curPlayer);
+        return (a.numActions == 0) ? false : true; // if numActions=0, return false; else, there's possible moves
     }
+
+    public boolean noPossibleAction(State s, char curPlayer) {
+        Action a = new Action(s, curPlayer);
+        return (a.numActions == 0) ? true : false; // if numActions=0, return true; else, there's no possible moves
+    }
+    // public Action getAction(State state, int value){
+
+    // }
 
     public boolean neighborTest(State state, int i, int j) {
         /*

@@ -5,7 +5,7 @@ public class State {
     char[][] gameState;
     boolean aiTurn; // true = ai's turn, false = human's turn
 
-    public State(int size, char player) {
+    public State(int size, char player) { // Emily: maybe we don't need to take in player? we will just parse in value?
         this.size = size;
         State.player = player;
 
@@ -148,4 +148,9 @@ public class State {
         return gameState;
     }
 
+    public State updateState(State s, char curPlayer, String move) {
+        gameState[getCol(Character.getNumericValue(move.charAt(1)))][getRow(move.charAt(0))] = curPlayer;
+        printState(gameState);
+        return s;
+    }
 }
