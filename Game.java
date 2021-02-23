@@ -1,6 +1,5 @@
 public class Game {
     char turn = 'x';
-    char aiColor;
     /*
      * initialize state, makes a board, decides who's turn is it, call the
      * algorithms implement these class? MINIMAX MINIMAX with alpha beta.. H-MINIMAX
@@ -24,136 +23,37 @@ public class Game {
     // }
 
     // assuming black always move first
-    // public Action minimax_decision(State state){
-    // Action a = new Action(state, turn);
-    // if (turn == 'x'){
-    // a.getAction(state, max_value(state)); //gets the best action
-    // }else {
-    // a.getAction(state, min_value(state));
-    // }
-    // // return a;
-    // }
+    public Action minimax_decision(State state) {
+        Action a = new Action(state, turn);
+        if (turn == 'x') {
+            a.getAction(state, max_value(state)); // gets the best action
+        } else {
+            a.getAction(state, min_value(state));
+        }
+        // return a;
+    }
 
-    /*
-     * Emily: I think it should be based on the color of AI instead of turn?
-     * minimax_decision is called when it's AI's turn will produce a Move look at
-     * all possible moves of AI look at all possible moves of player recursion **
-     */
-    public String minimax_decision(State state, char aiColor) {
-        Action a = new Action(state, aiColor);
-        if (a.numActions == 0) {
-            System.out.println("AI can't make any move");
-            if (a.hasPossibleAction(state, changePlayer(aiColor))) {
-                System.out.println("AI forbeit the move, it's player's tern");
-                // scanner here?
-            } else if (terminalTest(state)) {
-                System.out.println("board is full");
-                // calculate who win?
-            } else {
-                System.out.println("Something is wrong: AI/player or terminal tesT? idk");
+    public int max_value(State state){
+            if (terminalTest(state)) {
+                return utility(state);
             }
-
+            int v = Integer.MIN_VALUE;
+            for each a in Action(state) do
+                v = Math.max(v, min_value(Result(s, a)))
+            
+            return v;
         }
-        // find a terminal state of the first possible move
-        State terminalS = recursion_helper(state, aiColor, a.possibleActionsString[0]); // returns a terminal state
-        // go through the possible move array, try to find a move with a utility 1
-        for (int temp = 0; temp < a.numActions; temp++) {
-            if (utility(terminalS, aiColor) == 1) {
-                // if utility is 1, ai can make a move.
-                System.out.println("find a move for winning: " + a.possibleActionsString[temp]);// debug
-                return a.possibleActionsString[temp];
+
+    public int min_value(State s){
+            if (terminalTest(s)) {
+                return utility(s);
             }
-            // else, try the next possible move
-            terminalS = recursion_helper(state, aiColor, a.possibleActionsString[temp]); // use the curState to try
-                                                                                         // again
+            int v = Integer.MAX_VALUE;
+            for each a in Action(state) do
+                v = Math.min(v, max_value(Result(s, a)));
+            
+            return v;
         }
-        // try to find a move with a utility 0
-        for (int temp = 0; temp < a.numActions; temp++) {
-            if (utility(terminalS, aiColor) == 0) {
-                // if utility is 1, ai can make a move.
-                System.out.println("find a move for draw: " + a.possibleActionsString[temp]);// debug
-                return a.possibleActionsString[temp];
-            }
-            // else, try the next possible move
-            terminalS = recursion_helper(terminalS, aiColor, a.possibleActionsString[temp]); // returns a terminal state
-        }
-        // else, can't win
-        System.out.println("No move can be made for AI to win. num of moves are: " + a.numActions);
-        for (int i = 0; i < a.numActions; i++) {
-            System.out.print(a.possibleActionsString[i] + ", ");
-        }
-        return "??? error";
-    }
-
-    public char changePlayer(char curPlayer) {
-        return (curPlayer == 'x') ? 'o' : 'x';
-    }
-
-    public char opponent(char curPlayer) {
-        return (curPlayer == 'x') ? 'o' : 'x';
-    }
-
-    public State recursion_helper(State curState, char curPlayer, String move) {
-        /*
-         * Base case: return curState? when it's a terminal move(?) check for terminal
-         * state: if the board is full or if no player can make a move
-         */
-        /*
-         * Emily: shall we change the name of terminal test to like boardFull or move
-         * the noAction to terminal test?
-         */
-        // current player 'o' make a move. and print out the state
-        System.out.println("Recursion helper");
-        System.out.println("curPlayer: " + curPlayer + " ; Move: " + move);
-        Action a = new Action(curState, curPlayer); // for testing possible move only
-
-        State newState = curState.updateState(curState, curPlayer, move);// choose the left first and go down?
-        // current player is x
-        // curPlayer = changePlayer(curPlayer); // actually when should i put this line
-        // initial action is generated by current state and x
-        // if it is the terminal state
-        if ((a.noPossibleAction(curState, 'x') && a.noPossibleAction(curState, 'o')) || terminalTest(curState)) {
-            return curState;
-        }
-        // if curplayer can't move, but opponent can. change the player and continue
-        if (a.noPossibleAction(newState, curPlayer) && a.hasPossibleAction(newState, opponent(curPlayer))) {
-            System.out.println("current player: " + curPlayer + " has no legal move. forbeit");
-            curPlayer = changePlayer(curPlayer);
-            Action b = new Action(newState, curPlayer);
-            return recursion_helper(newState, curPlayer, b.possibleActionsString[0]);
-        }
-        // if it's not a terminal state yet, make curplayer make a move, and then test
-        // it again
-        Action c = new Action(newState, curPlayer); // for testing possible move only
-
-        System.out.println("End of Recursion helper");
-        System.out.println("curPlayer: " + curPlayer + " ; Move: " + move);
-        // String firstMove = a.possibleActionsString[0];
-        return recursion_helper(newState, curPlayer, c.possibleActionsString[0]);
-
-    }
-
-    // public int max_value(State state){
-    // if (terminalTest(state)) {
-    // return utility(state);
-    // }
-    // int v = Integer.MIN_VALUE;
-    // for each a in Action(state) do
-    // v = Math.max(v, min_value(Result(s, a)))
-
-    // return v;
-    // }
-
-    // public int min_value(State s){
-    // if (terminalTest(s)) {
-    // return utility(s);
-    // }
-    // int v = Integer.MAX_VALUE;
-    // for each a in Action(state) do
-    // v = Math.min(v, max_value(Result(s, a)));
-
-    // return v;
-    // }
 
     boolean terminalTest(State b) {
         // also test for if both players can do legal moves
@@ -167,7 +67,7 @@ public class Game {
         return true;
     }
 
-    int utility(State b, char aiColor) {
+    int utility(State b) {
         int xCount = 0;
         int oCount = 0;
         for (int i = 0; i < b.size; i++) {
@@ -179,7 +79,7 @@ public class Game {
                 }
             }
         }
-        if (aiColor == 'x') { // if ai is x, then if there are more x's on State, ai has won, so return 1
+        if (b.getPlayer() == 'o') { // if ai is x, then if there are more x's on State, ai has won, so return 1
             if (xCount > oCount) {
                 return 1;
             } else if (xCount < oCount) {
