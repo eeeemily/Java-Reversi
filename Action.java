@@ -112,18 +112,10 @@ public class Action {
     // check if the input(string like a4) is a possible move
     public boolean isPossibleAction(String s) {
         for (int i = 0; i < numActions; i++) {
-            if ((possibleActionsString[i]).compareTo(s) == 1)
+            if ((possibleActionsString[i]).equals(s))
                 return true;
         }
         return false;
-        // for (int i = 0; i < numActions; i++) {
-        // if (State.getCharRow(possibleActionsI[i]) == (s.charAt(0))) {
-        // if ((possibleActionsJ[i] + 1) == Character.getNumericValue(s.charAt(1))) {
-        // return true;
-        // }
-        // }
-        // }
-        // return false;
     }
 
     public boolean hasPossibleAction(State s, char curPlayer) {

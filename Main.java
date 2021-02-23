@@ -34,10 +34,12 @@ public class Main {
             // g.minimax_decision(b);
         } else {
             //BEGIN HERE
-            System.out.println("Your move (? for help): ");
+            System.out.println("-----------------------------");
+            System.out.print("Your move (? for help): ");
             String location = scan.next();
             // if (location.equals("?")) {
                 move.printActions();
+            System.out.println("-----------------------------");
             // } else {
                 // 1. x
                 System.out.println("location is " + move.isPossibleAction(location));
