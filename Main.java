@@ -40,7 +40,7 @@ public class Main {
             } else {
                 System.out.println("location is " + move.isPossibleAction(location));
                 // result(current, action): return a new state [?which class should i put it
-                // tho?]
+                // tho?
                 State newState = b.updateState(b, player, location);
                 g.minimax_decision(newState, 'o'); // 'o' is AI's role
                
