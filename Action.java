@@ -131,8 +131,8 @@ public class Action {
     // }
 
     public State flip(State s, String move, char curPlayer) {
-        int i = State.getCol(Character.getNumericValue(move.charAt(1)));
-        int j = State.getRow(move.charAt(0));
+        int i = State.getRow(move.charAt(0));
+        int j = State.getCol(Character.getNumericValue(move.charAt(1)));
         // for func flip
         flippable = new String[64]; // put all flippeable pieces in a array
         flippablePieces = 0; // count how many pieces can be flipped
@@ -144,8 +144,8 @@ public class Action {
         neighborTest(s, i, j);
         for (int a = 0; a < flippablePieces; a++) {
             String flips = flippable[a];
-            s.gameState[State.getCol(Character.getNumericValue(flips.charAt(1)))][State
-                    .getRow(flips.charAt(0))] = currentColor;
+            s.gameState[State.getRow(flips.charAt(0))][State
+                    .getCol(Character.getNumericValue(flips.charAt(1)))] = currentColor;
         }
         System.out.println("Flipped State: ");
         s.printState(s.gameState);
