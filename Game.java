@@ -37,14 +37,30 @@ public class Game {
             player_turn = 'x';
         }
 
+        
         if (turn == ai_turn) {
-            max_value(state);
+           
+            int v = Integer.MIN_VALUE;
+            String best = null;
             // a.getAction(state, max_value(state)); // gets the best action
+            for (int i = 0; i< temp_action.numActions; i++){ //for each possible action 
+                System.out.println("**********STEP222222222");
+                State result_state = Result(state, temp_action.possibleActionsString[i]);
+                
+                int possible = min_value(result_state);
+
+                // v = Math.max(v, min_value(result_state));
+                if (possible > v){
+                    v = possible;
+                    best = temp_action.possibleActionsString[i];
+                }
+            } 
+            return best;
+            
         } else {
             // a.getAction(state, min_value(state));
             min_value(state);
         }
-
         // System.out.println("min value" + min_value(state));
         // min_value(state);
         return "action";

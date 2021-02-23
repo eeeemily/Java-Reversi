@@ -154,6 +154,10 @@ public class Action {
     }
 
     public State flip(State s, String move, char curPlayer) {
+        System.out.println("Row: " + s.getRow(move.charAt(0)));
+        System.out.println("Column: " + s.getCol(Character.getNumericValue(move.charAt(1))));
+        s.gameState[s.getRow(move.charAt(0))][s.getCol(Character.getNumericValue(move.charAt(1)))] = curPlayer;
+
         boardSize = s.getSize();
         // for func flip
         flippable = new String[64]; // put all flippeable pieces in a array
@@ -248,7 +252,7 @@ public class Action {
                     flippablePieces += 1;
                     tempFlip += 1;
                 } else if (state.gameState[a][j] == currentColor) {
-                    System.out.println("South has Flippable pieces: " + tempFlip);
+                    // System.out.println("South has Flippable pieces: " + tempFlip); //PRINTS FLIPABLE PIECES
                     return true;
                 } else {
                     System.out.println("South reaches the boarder");

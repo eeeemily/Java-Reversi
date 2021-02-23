@@ -33,61 +33,29 @@ public class Main {
         if ((b.ai == 'x') && (move.numActions != 0)) {
             // g.minimax_decision(b);
         } else {
+            //BEGIN HERE
             System.out.println("Your move (? for help): ");
             String location = scan.next();
-            if (location.equals("?")) {
+            // if (location.equals("?")) {
                 move.printActions();
-            } else {
+            // } else {
                 // 1. x
-                // System.out.println("location is " + move.isPossibleAction(location));
+                System.out.println("location is " + move.isPossibleAction(location));
+                System.out.println("location: " + location);
                 while (!move.isPossibleAction(location)) {
                     System.out.println("please enter one of the possible moves: ");
+                    System.out.println("move is possible?: " + move.isPossibleAction(location));
                     move.printActions();
                     location = scan.next();
                 }
                 b = b.updateState(b, 'x', location);
 
-                // 2.o
-                System.out.println("o move: ");
-                move = new Action(b, 'o');
-                location = scan.next();
-                while (location.length() != 2) {
-                    System.out.println("illegal Entry, please enter a location on board: (e.g. a2)");
-                }
-                while (!move.isPossibleAction(location)) {
-                    System.out.println("please enter one of the possible moves: ");
-                    move.printActions();
-                    location = scan.next();
-                }
-                b = b.updateState(b, 'o', location);
-
-                // 3.x
-                System.out.println("x move: ");
-                move = new Action(b, 'x');
-                location = scan.next();
-                while (!move.isPossibleAction(location)) {
-                    System.out.println("please enter one of the possible moves: ");
-                    move.printActions();
-                    location = scan.next();
-                }
-                b = b.updateState(b, 'x', location);
-
-                // 4.o
-                System.out.println("o move: ");
-                move = new Action(b, 'o');
-                location = scan.next();
-                while (!move.isPossibleAction(location)) {
-                    System.out.println("please enter one of the possible moves: ");
-                    move.printActions();
-                    location = scan.next();
-                }
-                b = b.updateState(b, 'o', location);
-
+              
                 // g.minimax_decision(newState, 'o'); // 'o' is AI's role
 
             }
         }
 
-        scan.close();
+        // scan.close();
     }
-}
+

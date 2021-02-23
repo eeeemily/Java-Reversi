@@ -91,7 +91,7 @@ public class State {
         }
     }
 
-    public static int getRow(char row) {
+    public int getRow(char row) {
         switch (row) {
             case 'a':
                 return 0;
@@ -114,7 +114,7 @@ public class State {
         }
     }
 
-    public static int getCol(int col) {
+    public int getCol(int col) {
         return col - 1;
     }
 
