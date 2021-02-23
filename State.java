@@ -151,9 +151,10 @@ public class State {
     public State updateState(State s, char curPlayer, String move) {
         Action a = new Action(s, curPlayer);
 
-        gameState[getRow(move.charAt(0))][getCol(Character.getNumericValue(move.charAt(1)))] = curPlayer;
-        printState(gameState);
-        // s = a.flip(s, move, curPlayer);
+        // gameState[getRow(move.charAt(1))][getCol(Character.getNumericValue(move.charAt(0)))]
+        // = curPlayer;
+        // printState(gameState);
+        s = a.flip(s, move, curPlayer);
         return s;
     }
 }

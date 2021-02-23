@@ -99,8 +99,9 @@ public class Action {
             System.out.print("The " + (i + 1) + " possible action is: ");
             // System.out.print(State.getCharRow(possibleActionsI[i]));
             // System.out.println((possibleActionsJ[i] + 1));
-            System.out.print(possibleActionsString[i]);
-            System.out.println(";   Number of Pieces can be flipped in this move: " + numFlips[i]);
+            System.out.println(possibleActionsString[i]);
+            // System.out.println("; Number of Pieces can be flipped in this move: " +
+            // numFlips[i]);
 
         }
     }
@@ -129,10 +130,27 @@ public class Action {
     // public Action getAction(State state, int value){
 
     // }
+    public int[] convert(String a) {
+        int[] index = new int[2];
+        // System.out.println(index[0]); //0
+        // System.out.println(index[1]); //0
+        // a.charAt 1 is the column
+        index[0] = Character.getNumericValue(a.charAt(1)) - 1;
+        // a.charAt 0 is the Row
+        index[1] = Character.getNumericValue(a.charAt(0)) - 10;
+
+        // System.out.println(Character.getNumericValue('g'));
+        return index;
+    }
 
     public State flip(State s, String move, char curPlayer) {
-        int i = State.getRow(move.charAt(0));
-        int j = State.getCol(Character.getNumericValue(move.charAt(1)));
+        boardSize = s.getSize();
+        System.out.println("move is " + move);
+        int[] arrayMove = convert(move);
+        int i = arrayMove[0];
+        int j = arrayMove[1];
+        System.out.println("Flip:??  int i: " + i + " ; int: " + j);
+
         // for func flip
         flippable = new String[64]; // put all flippeable pieces in a array
         flippablePieces = 0; // count how many pieces can be flipped
@@ -144,8 +162,11 @@ public class Action {
         neighborTest(s, i, j);
         for (int a = 0; a < flippablePieces; a++) {
             String flips = flippable[a];
-            s.gameState[State.getRow(flips.charAt(0))][State
-                    .getCol(Character.getNumericValue(flips.charAt(1)))] = currentColor;
+            int[] convertIJ = convert(flips);
+            s.gameState[convertIJ[0]][convertIJ[1]] = currentColor;
+            System.out.println("flipping: " + flippable[a]);
+            // s.gameState[State.getRow(flips.charAt(1))][State
+            // .getCol(Character.getNumericValue(flips.charAt(0)))] = currentColor;
         }
         System.out.println("Flipped State: ");
         s.printState(s.gameState);
@@ -171,18 +192,25 @@ public class Action {
         // if the cell on top of the current one is opponent's Color, continue the test
         if (state.gameState[(i - 1)][j] == opponentColor) {
             // if there's a cell of the current color again, it is a legal move
-            flippable[flippablePieces] = "" + State.getCharRow(i - 1) + (j + 1);
-            flippablePieces += 1;
+            flippable[flippablePieces] = "" + State.getCharRow(j) + (i);
+            int tempFlip = 1;
+            flippablePieces += tempFlip;
             for (int a = (i - 2); a >= 0; a--) {
                 if (state.gameState[a][j] == '-') {
-                    flippablePieces -= 1;
+                    flippablePieces -= tempFlip;
                     return false;
-                }
-                if (state.gameState[a][j] == currentColor) {
-                    north += 1;
-                    flippable[flippablePieces] = "" + State.getCharRow(a) + (j + 1);
+                } else if (state.gameState[a][j] == opponentColor) {
+                    north += 1; // useless?
+                    flippable[flippablePieces] = "" + State.getCharRow(j) + (a + 1);
                     flippablePieces += 1;
+                    tempFlip += 1;
+                } else if (state.gameState[a][j] == currentColor) {
+                    System.out.println("North has Flippable pieces: " + tempFlip);
                     return true;
+                } else {
+                    System.out.println("North reaches the boarder");
+                    flippablePieces -= tempFlip;
+                    return false;
                 }
             }
         }
@@ -191,24 +219,30 @@ public class Action {
 
     public boolean South(State state, int i, int j) {
         // top: i[i+2 to boarderSize]?; j stays
-        if (i == boardSize || i == boardSize - 1)
+        if (i == boardSize - 1 || i == boardSize - 2)
             return false;
 
         // if the cell on top of the current one is opponent's Color, continue the test
         if (state.gameState[(i + 1)][j] == opponentColor) {
-            flippable[flippablePieces] = "" + State.getCharRow(i + 1) + (j + 1);
-            flippablePieces += 1;
+            flippable[flippablePieces] = "" + State.getCharRow(j) + (i + 2);
+            int tempFlip = 1;
+            flippablePieces += tempFlip;
             // if there's a cell of the current color again, it is a legal move
-            for (int a = (i + 2); a <= boardSize; a++) {
+            for (int a = (i + 2); a < boardSize; a++) {
                 if (state.gameState[a][j] == '-') {
-                    flippablePieces -= 1;
+                    flippablePieces -= tempFlip;
                     return false;
-                }
-                if (state.gameState[a][j] == currentColor) {
-                    south += 1;
-                    flippable[flippablePieces] = "" + State.getCharRow(a) + (j + 1);
+                } else if (state.gameState[a][j] == opponentColor) {
+                    flippable[flippablePieces] = "" + State.getCharRow(j) + (a + 1);
                     flippablePieces += 1;
+                    tempFlip += 1;
+                } else if (state.gameState[a][j] == currentColor) {
+                    System.out.println("South has Flippable pieces: " + tempFlip);
                     return true;
+                } else {
+                    System.out.println("South reaches the boarder");
+                    flippablePieces -= tempFlip;
+                    return false;
                 }
             }
         }
@@ -223,18 +257,24 @@ public class Action {
         // if the cell on top of the current one is opponent's Color, continue the test
         if (state.gameState[i][j - 1] == opponentColor) {
             // if there's a cell of the current color again, it is a legal move
-            flippable[flippablePieces] = "" + State.getCharRow(i) + (j);
-            flippablePieces += 1;
+            flippable[flippablePieces] = "" + State.getCharRow(j - 1) + (i + 1);
+            int tempFlip = 1;
+            flippablePieces += tempFlip;
             for (int a = (j - 2); a >= 0; a--) {
                 if (state.gameState[i][a] == '-') {
-                    flippablePieces -= 1;
+                    flippablePieces -= tempFlip;
                     return false;
-                }
-                if (state.gameState[i][a] == currentColor) {
-                    flippable[flippablePieces] = "" + State.getCharRow(i) + (a + 1);
+                } else if (state.gameState[i][a] == opponentColor) {
+                    flippable[flippablePieces] = "" + State.getCharRow(a) + (i + 1);
                     flippablePieces += 1;
-                    west += 1;
+                    tempFlip += 1;
+                } else if (state.gameState[i][a] == currentColor) {
+                    System.out.println("West has Flippable pieces: " + tempFlip);
                     return true;
+                } else {
+                    System.out.println("West reaches the boarder");
+                    flippablePieces -= tempFlip;
+                    return false;
                 }
             }
         }
@@ -243,24 +283,30 @@ public class Action {
 
     public boolean East(State state, int i, int j) {
         // top: i; j [j+2 to boarderSize]
-        if (j == boardSize || j == boardSize - 1)
+        if (j == boardSize - 1 || j == boardSize - 2)
             return false;
 
         // if the cell on top of the current one is opponent's Color, continue the test
         if (state.gameState[(i)][j + 1] == opponentColor) {
             // if there's a cell of the current color again, it is a legal move
-            flippable[flippablePieces] = "" + State.getCharRow(i) + (j + 2);
-            flippablePieces += 1;
-            for (int a = (j + 2); a <= boardSize; a++) {
+            flippable[flippablePieces] = "" + State.getCharRow(j + 1) + (i + 2);
+            int tempFlip = 1;
+            flippablePieces += tempFlip;
+            for (int a = (j + 2); a < boardSize; a++) {
                 if (state.gameState[i][a] == '-') {
-                    flippablePieces -= 1;
+                    flippablePieces -= tempFlip;
                     return false;
-                }
-                if (state.gameState[i][a] == currentColor) {
-                    flippable[flippablePieces] = "" + State.getCharRow(i) + (a + 1);
+                } else if (state.gameState[i][a] == opponentColor) {
+                    flippable[flippablePieces] = "" + State.getCharRow(a) + (i + 1);
                     flippablePieces += 1;
-                    east += 1;
+                    tempFlip += 1;
+                } else if (state.gameState[i][a] == currentColor) {
+                    System.out.println("East has Flippable pieces: " + tempFlip);
                     return true;
+                } else {
+                    System.out.println("East reaches the boarder");
+                    flippablePieces -= tempFlip;
+                    return false;
                 }
             }
         }
@@ -269,120 +315,136 @@ public class Action {
 
     public boolean NW(State state, int i, int j) {
         // diagonal, i=j; otherwise, the spot is not at the diagonal position
-        if (i != j) {
-            return false;
-        }
-        //
-        if (i == 0 || i == 1)
+        if (i == 0 || i == 1 || j == 0 || j == 1)
             return false;
 
         // if the cell on top of the current one is opponent's Color, continue the test
-        if (state.gameState[i - 1][i - 1] == opponentColor) {
-            flippable[flippablePieces] = "" + State.getCharRow(i - 1) + (i);
-            flippablePieces += 1;
+        if (state.gameState[i - 1][j - 1] == opponentColor) {
+            flippable[flippablePieces] = "" + State.getCharRow(j - 1) + (i);
+            int tempFlip = 1;
+            flippablePieces += tempFlip;
             // if there's a cell of the current color again, it is a legal move
+            int b = j - 2;
             for (int a = (i - 2); a >= 0; a--) {
-                if (state.gameState[a][a] == '-') {
-                    flippablePieces -= 1;
+                if (state.gameState[a][b] == '-') {
+                    flippablePieces -= tempFlip;
+                    return false;
+                } else if (state.gameState[a][b] == opponentColor) {
+                    flippable[flippablePieces] = "" + State.getCharRow(b) + (a + 1);
+                    flippablePieces += 1;
+                    tempFlip += 1;
+                } else if (state.gameState[a][b] == currentColor) {
+                    System.out.println("NW has Flippable pieces: " + tempFlip);
+                    return true;
+                } else {
+                    System.out.println("NW got a problem");
+                    flippablePieces -= tempFlip;
                     return false;
                 }
-                if (state.gameState[a][a] == currentColor) {
-                    flippable[flippablePieces] = "" + State.getCharRow(a) + (a + 1);
-                    flippablePieces += 1;
-                    nw += 1;
-                    return true;
-                }
+                b--;
             }
         }
         return false;
     }
 
     public boolean SE(State state, int i, int j) {
-        // diagonal, i=j; otherwise, the spot is not at the diagonal position
-        if (i != j) {
-            return false;
-        }
-        //
-        if (i == boardSize || i == boardSize - 1)
+        if (i == boardSize - 1 || i == boardSize - 2 || j == boardSize - 1 || j == boardSize - 2)
             return false;
 
         // if the cell on top of the current one is opponent's Color, continue the test
-        if (state.gameState[j + 1][j + 1] == opponentColor) {
-            flippable[flippablePieces] = "" + State.getCharRow(j + 1) + (j + 2);
-            flippablePieces += 1;
+        if (state.gameState[i + 1][j + 1] == opponentColor) {
+            flippable[flippablePieces] = "" + State.getCharRow(j + 1) + (i + 1);
+            int tempFlip = 1;
+            flippablePieces += tempFlip;
             // if there's a cell of the current color again, it is a legal move
-            for (int a = (j + 2); a <= boardSize; a++) {
-                if (state.gameState[a][a] == '-') {
-                    flippablePieces -= 1;
+            int b = j + 2;
+            for (int a = (i + 2); a < boardSize; a++) {
+                if (state.gameState[a][b] == '-') {
+                    flippablePieces -= tempFlip;
+                    return false;
+                } else if (state.gameState[a][b] == opponentColor) {
+                    flippable[flippablePieces] = "" + State.getCharRow(b) + (a + 1);
+                    flippablePieces += 1;
+                    tempFlip += 1;
+                } else if (state.gameState[a][b] == currentColor) {
+                    System.out.println("NW has Flippable pieces: " + tempFlip);
+                    return true;
+                } else {
+                    System.out.println("SE reaches the boarder, without finding curCOlor");
+                    flippablePieces -= tempFlip;
                     return false;
                 }
-                if (state.gameState[a][a] == currentColor) {
-                    flippable[flippablePieces] = "" + State.getCharRow(a) + (a + 1);
-                    flippablePieces += 1;
-                    ne += 1;
-                    return true;
-                }
+                b++;
             }
         }
         return false;
     }
 
     public boolean NE(State state, int i, int j) {
-        // diagonal, i+j=boardSize, otherwise, the spot is not at the diagonal position
-        if ((i + j + 1) != boardSize) {
-            return false;
-        }
-        //
-        if (i == 0 || i == 1)
+
+        if (i == 0 || i == 1 || j == (boardSize - 1) || j == (boardSize - 2))
             return false;
 
         // if the cell on top of the current one is opponent's Color, continue the test
-        if (state.gameState[(i - 1)][boardSize - i + 1] == opponentColor) {
-            flippable[flippablePieces] = "" + State.getCharRow(i - 1) + (boardSize - i + 2);
-            flippablePieces += 1;
+        if (state.gameState[i - 1][j + 1] == opponentColor) {
+            flippable[flippablePieces] = "" + State.getCharRow(j + 1) + (i);
+            int tempFlip = 1;
+            flippablePieces += tempFlip;
             // if there's a cell of the current color again, it is a legal move
+            int b = j + 2;
             for (int a = (i - 2); a >= 0; a--) {
-                if (state.gameState[a][boardSize - a] == '-') {
-                    flippablePieces -= 1;
+                if (state.gameState[a][b] == '-') {
+                    flippablePieces -= tempFlip;
+                    return false;
+                } else if (state.gameState[a][b] == opponentColor) {
+                    flippable[flippablePieces] = "" + State.getCharRow(b) + (a + 1);
+                    flippablePieces += 1;
+                    tempFlip += 1;
+                } else if (state.gameState[a][b] == currentColor) {
+                    System.out.println("NW has Flippable pieces: " + tempFlip);
+                    return true;
+                } else {
+                    System.out.println("SE reaches the boarder, without finding curCOlor");
+                    flippablePieces -= tempFlip;
                     return false;
                 }
-                if (state.gameState[a][boardSize - a] == currentColor) {
-                    flippable[flippablePieces] = "" + State.getCharRow(a) + (boardSize - a + 1);
-                    flippablePieces += 1;
-                    ne += 1;
-                    return true;
-                }
+                b++;
+
             }
         }
         return false;
     }
 
     public boolean SW(State state, int i, int j) {
-        // diagonal, i+j=boardSize; otherwise, the spot is not at the diagonal position
-        if ((i + j + 1) != boardSize) {
-
-            return false;
-        }
-        //
-        if (i == boardSize || i == boardSize - 1)
+        // i=6,7 j=0,1
+        if (i == (boardSize - 1) || i == (boardSize - 2) || j == 0 || j == 1)
             return false;
 
         // if the cell on top of the current one is opponent's Color, continue the test
-        if (state.gameState[(i + 1)][boardSize - i - 1] == opponentColor) {
-            flippable[flippablePieces] = "" + State.getCharRow(i + 1) + (boardSize - i);
-            flippablePieces += 1;
+        if (state.gameState[(i + 1)][j - 1] == opponentColor) {
+            flippable[flippablePieces] = "" + State.getCharRow(j - 1) + (i + 2);
+            int tempFlip = 1;
+            flippablePieces += tempFlip;
             // if there's a cell of the current color again, it is a legal move
-            for (int a = (i + 2); a <= boardSize; a++) {
-                if (state.gameState[a][boardSize - a] == '-') {
+            int b = j - 2;
+            for (int a = (i + 2); a < boardSize; a++) {
+                if (state.gameState[a][b] == '-') {
                     flippablePieces -= 1;
                     return false;
-                }
-                if (state.gameState[a][boardSize - a] == currentColor) {
-                    flippable[flippablePieces] = "" + State.getCharRow(a) + (boardSize - a + 1);
+                } else if (state.gameState[a][b] == opponentColor) {
+                    flippable[flippablePieces] = "" + State.getCharRow(b) + (a + 1);
                     flippablePieces += 1;
-                    sw += 1;
+                    tempFlip += 1;
+                } else if (state.gameState[a][b] == currentColor) {
+                    System.out.println("NW has Flippable pieces: " + tempFlip);
                     return true;
+                } else {
+                    System.out.println("SE reaches the boarder, without finding curCOlor");
+                    flippablePieces -= tempFlip;
+                    return false;
                 }
+                b--;
+
             }
         }
         return false;

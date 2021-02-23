@@ -51,6 +51,9 @@ public class Main {
                 System.out.println("o move: ");
                 move = new Action(b, 'o');
                 location = scan.next();
+                while (location.length() != 2) {
+                    System.out.println("illegal Entry, please enter a location on board: (e.g. a2)");
+                }
                 while (!move.isPossibleAction(location)) {
                     System.out.println("please enter one of the possible moves: ");
                     move.printActions();
