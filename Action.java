@@ -1,5 +1,5 @@
 public class Action {
-    State currentState;
+    State state;
     int boardSize;
     // char [][] possibleActions;
     int[] possibleActionsI; // can be removed?
@@ -11,20 +11,23 @@ public class Action {
     int numActions; // posible
     boolean xTurn;
     boolean oTurn;
+    char whoseTurn;
     char opponentColor;
     char currentColor;
     int north, west, south, east, nw, ne, sw, se; // number of opponent pieces can be flipped in each of the 8
                                                   // directions; actually, might just loop through each cell agin and
                                                   // substract from current state; nvm, lemme still do this way
 
-    public Action(State s, char whoseTurn) {
-        currentState = s;
+    public Action(State state, char whoseTurn) {
+        this.state = state;
+        this.whoseTurn = whoseTurn;
+
         possibleActionsI = new int[64];
         possibleActionsJ = new int[64];
         possibleActionsString = new String[64];
         numActions = 0;
         numFlips = new int[64]; // how many pieces can one move flip
-        boardSize = s.getSize();
+        boardSize = state.getSize();
         north = west = south = east = nw = ne = sw = se = 0;
 
         // // for func flip
@@ -46,7 +49,8 @@ public class Action {
             System.out.println("illegeal input: who's turn is it?? " + whoseTurn);
         }
 
-        // public Action getAction(State s, int value){
+        // public String getAction(State s, int value){
+        // return "Best Action";
         // }
 
         // s[i][j] goes through each cell on the board
@@ -54,15 +58,31 @@ public class Action {
             for (int j = 0; j < boardSize; j++) {
                 north = west = south = east = nw = ne = sw = se = 0; // reset
                 // filter 1: find the empty spot
-                if (s.gameState[i][j] == '-') { // see if whole board is x's and o's
+                if (state.gameState[i][j] == '-') { // see if whole board is x's and o's
                     // filter 2: do neighbor test to see if the current spot has any of the opposite
-                    if (neighborTest(s, i, j)) {
+                    if (neighborTest(state, i, j)) {
                         numFlips[numActions] = north + south + west + east + nw + ne + sw + se;
                         addActions(i, j);
                     }
                 }
             }
         }
+    }
+
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
+
+    public char getWhoseTurn() {
+        return whoseTurn;
+    }
+
+    public void setWhoseTurn(char whoseTurn) {
+        this.whoseTurn = whoseTurn;
     }
 
     public void addActions(int i, int j) {
