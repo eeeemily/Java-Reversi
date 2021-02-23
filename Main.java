@@ -5,7 +5,7 @@ public class Main {
         Scanner scan = new Scanner(System.in);
         System.out.println("Choose your game: \n 1. Small 4x4 Reversi \n 2. Standard 8x8 Reversi");
         // int boardChoice = scan.nextInt();
-        int boardChoice = 1; //for testing
+        int boardChoice = 1; // for testing
         int size;
         if (boardChoice == 1) {
             size = 4;
@@ -38,12 +38,50 @@ public class Main {
             if (location.equals("?")) {
                 move.printActions();
             } else {
-                System.out.println("location is " + move.isPossibleAction(location));
-                // result(current, action): return a new state [?which class should i put it
-                // tho?]
-                State newState = b.updateState(b, player, location);
-                g.minimax_decision(newState, 'o'); // 'o' is AI's role
-               
+                // 1. x
+                // System.out.println("location is " + move.isPossibleAction(location));
+                while (!move.isPossibleAction(location)) {
+                    System.out.println("please enter one of the possible moves: ");
+                    move.printActions();
+                    location = scan.next();
+                }
+                b = b.updateState(b, 'x', location);
+
+                // 2.o
+                System.out.println("o move: ");
+                move = new Action(b, 'o');
+                location = scan.next();
+                while (!move.isPossibleAction(location)) {
+                    System.out.println("please enter one of the possible moves: ");
+                    move.printActions();
+                    location = scan.next();
+                }
+                b = b.updateState(b, 'o', location);
+
+                // 3.x
+                System.out.println("x move: ");
+                move = new Action(b, 'x');
+                location = scan.next();
+                while (!move.isPossibleAction(location)) {
+                    System.out.println("please enter one of the possible moves: ");
+                    move.printActions();
+                    location = scan.next();
+                }
+                b = b.updateState(b, 'x', location);
+
+                // 4.o
+                System.out.println("o move: ");
+                move = new Action(b, 'o');
+                location = scan.next();
+                while (!move.isPossibleAction(location)) {
+                    System.out.println("please enter one of the possible moves: ");
+                    move.printActions();
+                    location = scan.next();
+                }
+                b = b.updateState(b, 'o', location);
+
+                // g.minimax_decision(newState, 'o'); // 'o' is AI's role
+
             }
         }
 
