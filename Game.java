@@ -1,5 +1,4 @@
 public class Game {
-    char turn = 'x';
     /*
      * initialize state, makes a board, decides who's turn is it, call the
      * algorithms implement these class? MINIMAX MINIMAX with alpha beta.. H-MINIMAX
@@ -21,16 +20,22 @@ public class Game {
     // }
     // return 0;
     // }
-
+    public Action temp_action;
+    public char curr_turn;
     // assuming black always move first
-    public Action minimax_decision(State state) {
+    public String minimax_decision(State state, char turn) { //return an action string
         Action a = new Action(state, turn);
-        if (turn == 'x') {
+        // System.out.println(a.numFlips);
+        // a.printActions();
+        temp_action = a;
+        curr_turn = turn;
+
+        if (curr_turn == 'x') {
             a.getAction(state, max_value(state)); // gets the best action
         } else {
             a.getAction(state, min_value(state));
         }
-        // return a;
+        return "action";
     }
 
     public int max_value(State state){
@@ -38,22 +43,28 @@ public class Game {
                 return utility(state);
             }
             int v = Integer.MIN_VALUE;
-            for each a in Action(state) do
-                v = Math.max(v, min_value(Result(s, a)))
-            
+            for (int i = 0; i< temp_action.possibleActionsString.length; i++){ //for each possible action 
+                v = Math.max(v, min_value(Result(state, temp_action.possibleActionsString[i])));
+            } 
             return v;
-        }
+    }
+    
+    public State Result(State s, String move) {
+        s.updateState(s, curr_turn, move);
+        return s;
+    }
 
     public int min_value(State s){
-            if (terminalTest(s)) {
-                return utility(s);
-            }
-            int v = Integer.MAX_VALUE;
-            for each a in Action(state) do
-                v = Math.min(v, max_value(Result(s, a)));
-            
-            return v;
+        if (terminalTest(s)) {
+            return utility(s);
         }
+        int v = Integer.MAX_VALUE;
+        for (int i = 0; i< temp_action.possibleActionsString.length; i++){ //for each possible action 
+            v = Math.min(v, max_value(Result(s, temp_action.possibleActionsString[i])));
+            // v = Math.min(v, max_value(Result(s, a)));
+        }
+        return v;
+    }
 
     boolean terminalTest(State b) {
         // also test for if both players can do legal moves

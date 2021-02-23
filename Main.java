@@ -4,7 +4,8 @@ public class Main {
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
         System.out.println("Choose your game: \n 1. Small 4x4 Reversi \n 2. Standard 8x8 Reversi");
-        int boardChoice = scan.nextInt();
+        // int boardChoice = scan.nextInt();
+        int boardChoice = 1; //for testing
         int size;
         if (boardChoice == 1) {
             size = 4;
@@ -42,6 +43,7 @@ public class Main {
                 // tho?]
                 State newState = b.updateState(b, player, location);
                 g.minimax_decision(newState, 'o'); // 'o' is AI's role
+               
             }
         }
 
