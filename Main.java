@@ -51,6 +51,7 @@ public class Main {
                     move.printActions(b, player);
                     location = scan.next();
                 }
+                // if(move.isPossibleAction(b, curPlayer, move))
                 b = b.updateState(b, player, location);
                 // System.out.println("-----------------RANDOM AGENT PLAYING----------------");
                 // g.RandomAgent(b, 'o');

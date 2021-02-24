@@ -16,9 +16,10 @@ public class Action {
     char whoseTurn;
     char opponentColor;
     char currentColor;
-    int north, west, south, east, nw, ne, sw, se; // number of opponent pieces can be flipped in each of the 8
-                                                  // directions; actually, might just loop through each cell agin and
-                                                  // substract from current state; nvm, lemme still do this way
+    // int north, west, south, east, nw, ne, sw, se; // number of opponent pieces
+    // can be flipped in each of the 8
+    // directions; actually, might just loop through each cell agin and
+    // substract from current state; nvm, lemme still do this way
 
     public Action() {
         // maybe i don't need to parse in these confusing argument
@@ -110,8 +111,8 @@ public class Action {
 
     public void printActions(State s, char curPlayer) {
         findActions(s, curPlayer);
-        System.out.println("Current player: " + currentColor);
-        System.out.print(" has the following legal moves: " + numActions);
+        System.out.print("Current player: " + currentColor);
+        System.out.println(" has the following legal moves: " + numActions);
         for (int i = 0; i < numActions; i++) {
             System.out.print("The " + (i + 1) + " possible action is: ");
             // System.out.print(State.getCharRow(possibleActionsI[i]));
@@ -226,12 +227,12 @@ public class Action {
             flippable[flippablePieces] = convertToMove((i - 1), j);
             int tempFlip = 1;
             flippablePieces += tempFlip;
-            for (int a = (i - 2); a >= 0; a--) {
+            for (int a = (i - 2); a > 0; a--) {
                 if (state.gameState[a][j] == '-') {
                     flippablePieces -= tempFlip;
                     return false;
                 } else if (state.gameState[a][j] == opponentColor) {
-                    north += 1; // useless?
+                    // north += 1; // useless?
                     flippable[flippablePieces] = convertToMove(a, j);
                     flippablePieces += 1;
                     tempFlip += 1;
@@ -299,7 +300,7 @@ public class Action {
             flippable[flippablePieces] = convertToMove(i, j - 1);
             int tempFlip = 1;
             flippablePieces += tempFlip;
-            for (int a = (j - 2); a >= 0; a--) {
+            for (int a = (j - 2); a > 0; a--) {
                 if (state.gameState[i][a] == '-') {
                     flippablePieces -= tempFlip;
                     return false;
@@ -371,7 +372,12 @@ public class Action {
             flippablePieces += tempFlip;
             // if there's a cell of the current color again, it is a legal move
             int b = j - 2;
-            for (int a = (i - 2); a >= 0; a--) {
+            // if((i-2)==0){
+            // System.out.println("NW out of index?");
+            // return false;
+            // }
+
+            for (int a = (i - 2); a > 0; a--) {
                 if (a == boardSize)
                     return false;
                 if (state.gameState[a][b] == '-') {
@@ -445,7 +451,7 @@ public class Action {
             flippablePieces += tempFlip;
             // if there's a cell of the current color again, it is a legal move
             int b = j + 2;
-            for (int a = (i - 2); a >= 0; a--) {
+            for (int a = (i - 2); a > 0; a--) {
                 if (state.gameState[a][b] == '-') {
                     flippablePieces -= tempFlip;
                     return false;
