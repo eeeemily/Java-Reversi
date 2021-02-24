@@ -36,7 +36,7 @@ public class Action {
         // north = west = south = east = nw = ne = sw = se = 0;
 
         // // for func flip
-        flippable = new String[64]; // put all flippeable pieces in a array
+        flippable = new String[1000]; // put all flippeable pieces in a array
         flippablePieces = 0; // count how many pieces can be flipped
 
         // see who's making a move at the given state s
@@ -268,6 +268,7 @@ public class Action {
                     flippablePieces -= tempFlip;
                     return false;
                 } else if (state.gameState[a][j] == opponentColor) {
+                    System.out.println("debugging: flippablePieces: " + flippablePieces);
                     flippable[flippablePieces] = convertToMove(a, j);
                     flippablePieces += 1;
                     tempFlip += 1;
