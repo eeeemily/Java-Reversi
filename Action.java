@@ -85,7 +85,7 @@ public class Action {
         findActions(s, curPlayer);
         for (int i = 0; i < numActions; i++) {
             if ((possibleActionsString[i]).equals(move)) {
-                System.out.println(move + " is a possible move at current state for Player " + curPlayer);
+                // System.out.println(move + " is a possible move at current state for Player " + curPlayer);
                 return true;
             }
         }
@@ -133,10 +133,10 @@ public class Action {
 
         System.out.println("******** Flip Function***********");
         neighborTest(s, move);
-        System.out.println("fiona test here: ");
-        for (int a = 0; a < flippablePieces; a++) {
-            System.out.print(flippable[a]);
-        }
+        // System.out.println("fiona test here: ");
+        // for (int a = 0; a < flippablePieces; a++) {
+        //     System.out.print(flippable[a]);
+        // }
         for (int a = 0; a < flippablePieces; a++) {
             String flips = flippable[a];
             int[] convertIJ = convertToBoard(flips);
@@ -144,7 +144,7 @@ public class Action {
             System.out.println("flipping: " + flippable[a]);
         }
         s.printState(s.gameState);
-        System.out.println("flippablePieces is crazy: " + flippablePieces);
+        System.out.println("flippablePieces : " + flippablePieces);
         System.out.println("******** End of Flip Function***********");
         return s;
     }

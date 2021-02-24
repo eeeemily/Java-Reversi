@@ -26,7 +26,7 @@ public class Game {
     public char player_turn;
     // assuming black always move first
     public String minimax_decision(State state, char turn) { //return an action string
-        Action a = new Action(state, turn);
+        Action a = new Action();
         // System.out.println(a.numFlips);
         // a.printActions();
         temp_action = a;
@@ -109,14 +109,14 @@ public class Game {
         return v;
     }
 
-    public void RandomAgent(State s, char turn) {
-        Action move = new Action(s, turn);
+    public String RandomAgent(Action move, State s, char turn) {
+        System.out.println("--------------RandomAgent Running--------------");
         Random rand = new Random();
         if(move.numActions == 0){
-            System.out.println("No moves.");
+            return null;
         }else {
             int rand_move = rand.nextInt(move.numActions);
-            s.updateState(s, turn, move.possibleActionsString[rand_move]);
+            return move.possibleActionsString[rand_move];
         }
     }
 

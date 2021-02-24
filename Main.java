@@ -36,10 +36,29 @@ public class Main {
         while (move.hasPossibleAction(b, player) == true) {
             System.out.println("-----------------------------");
             System.out.print(player + " move: (? for help): ");
-            String location = scan.next();
+            String location;
+            if (player == 'x'){
+                location = scan.next();
+            }else{
+                location = g.RandomAgent(move, b, 'o');
+            }
+            
+            if (location == null){
+                System.out.println("No possible moves for " + player);
+            }
+
             if (location.equals("?")) {
                 move.printActions(b, player);
-                System.out.println("-----------------------------");
+                while (!move.isPossibleAction(b, player, location)) {
+                    System.out.println("please enter one of the possible moves: ");
+                    // System.out.println("move is possible?: " + move.isPossibleAction(location));
+                    move.printActions(b, player);
+                    location = scan.next();
+                }
+                // if(move.isPossibleAction(b, curPlayer, move))
+                b = b.updateState(b, player, location);
+                // System.out.println("-----------------RANDOM AGENT PLAYING----------------");
+                // g.RandomAgent(b, 'o');
             } else {
                 // 1. x
                 // System.out.println("1.location entered: " + location + " is legal(T/F)? "
