@@ -5,7 +5,7 @@ public class Main {
         Scanner scan = new Scanner(System.in);
         System.out.println("Choose your game: \n 1. Small 4x4 Reversi \n 2. Standard 8x8 Reversi");
         // int boardChoice = scan.nextInt();
-        int boardChoice = 1; // for testing
+        int boardChoice = 2; // for testing
         int size;
         if (boardChoice == 1) {
             size = 4;
