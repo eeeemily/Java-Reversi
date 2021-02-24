@@ -5,7 +5,7 @@ public class Main {
         Scanner scan = new Scanner(System.in);
         System.out.println("Choose your game: \n 1. Small 4x4 Reversi \n 2. Standard 8x8 Reversi");
         // int boardChoice = scan.nextInt();
-        int boardChoice = 2; // for testing
+        int boardChoice = 1; // for testing
         int size;
         if (boardChoice == 1) {
             size = 4;
@@ -40,7 +40,8 @@ public class Main {
             if (player == 'x'){
                 location = scan.next();
             }else{
-                location = g.RandomAgent(move, b, 'o');
+                // location = g.RandomAgent(move, b, 'o');
+                location = g.minimax_decision(move, b, 'o');
             }
             
             if (location == null){
@@ -57,10 +58,7 @@ public class Main {
                 }
                 // if(move.isPossibleAction(b, curPlayer, move))
                 b = b.updateState(b, player, location);
-                // System.out.println("-----------------RANDOM AGENT PLAYING----------------");
-                // g.RandomAgent(b, 'o');
             } else {
-                // 1. x
                 // System.out.println("1.location entered: " + location + " is legal(T/F)? "
                 // + move.isPossibleAction(b, player, location));
                 // System.out.println("location:);
