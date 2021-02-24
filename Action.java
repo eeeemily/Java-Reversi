@@ -227,8 +227,9 @@ public class Action {
             flippable[flippablePieces] = convertToMove((i - 1), j);
             int tempFlip = 1;
             flippablePieces += tempFlip;
-            for (int a = (i - 2); a > 0; a--) {
-                if (state.gameState[a][j] == '-') {
+            for (int a = (i - 2); a >= 0; a--) {
+                if (a < 0 || j < 0) {
+                    // System.out.println("a<0 or b<0::: a: " + a + " b: " + b);
                     flippablePieces -= tempFlip;
                     return false;
                 } else if (state.gameState[a][j] == opponentColor) {
@@ -239,6 +240,9 @@ public class Action {
                 } else if (state.gameState[a][j] == currentColor) {
                     // System.out.println("-------North has Flippable pieces: " + tempFlip);
                     return true;
+                } else if (state.gameState[a][j] == '-') {
+                    flippablePieces -= tempFlip;
+                    return false;
                 } else {
                     // System.out.println("North reaches the boarder");
                     flippablePieces -= tempFlip;
@@ -264,7 +268,7 @@ public class Action {
             flippablePieces += tempFlip;
             // if there's a cell of the current color again, it is a legal move
             for (int a = (i + 2); a < boardSize; a++) {
-                if (state.gameState[a][j] == '-') {
+                if (a > boardSize || j > boardSize) {
                     flippablePieces -= tempFlip;
                     return false;
                 } else if (state.gameState[a][j] == opponentColor) {
@@ -277,6 +281,9 @@ public class Action {
                     // PRINTS
                     // FLIPABLE PIECES
                     return true;
+                } else if (state.gameState[a][j] == '-') {
+                    flippablePieces -= tempFlip;
+                    return false;
                 } else {
                     // System.out.println("South reaches the boarder");
                     flippablePieces -= tempFlip;
@@ -302,7 +309,7 @@ public class Action {
             int tempFlip = 1;
             flippablePieces += tempFlip;
             for (int a = (j - 2); a > 0; a--) {
-                if (state.gameState[i][a] == '-') {
+                if (i < 0 || a < 0) {
                     flippablePieces -= tempFlip;
                     return false;
                 } else if (state.gameState[i][a] == opponentColor) {
@@ -312,6 +319,9 @@ public class Action {
                 } else if (state.gameState[i][a] == currentColor) {
                     // System.out.println("-------West has Flippable pieces: " + tempFlip);
                     return true;
+                } else if (state.gameState[i][a] == '-') {
+                    flippablePieces -= tempFlip;
+                    return false;
                 } else {
                     // System.out.println("West reaches the boarder");
                     flippablePieces -= tempFlip;
@@ -337,7 +347,7 @@ public class Action {
             int tempFlip = 1;
             flippablePieces += tempFlip;
             for (int a = (j + 2); a < boardSize; a++) {
-                if (state.gameState[i][a] == '-') {
+                if (i > boardSize || a > boardSize) {
                     flippablePieces -= tempFlip;
                     return false;
                 } else if (state.gameState[i][a] == opponentColor) {
@@ -347,6 +357,9 @@ public class Action {
                 } else if (state.gameState[i][a] == currentColor) {
                     // System.out.println("-------East has Flippable pieces: " + tempFlip);
                     return true;
+                } else if (state.gameState[i][a] == '-') {
+                    flippablePieces -= tempFlip;
+                    return false;
                 } else {
                     // System.out.println("East reaches the boarder");
                     flippablePieces -= tempFlip;
@@ -378,10 +391,8 @@ public class Action {
             // return false;
             // }
 
-            for (int a = (i - 2); a > 0; a--) {
-                if (a == boardSize)
-                    return false;
-                if (state.gameState[a][b] == '-') {
+            for (int a = (i - 2); a >= 0; a--) {
+                if (a < 0 || b < 0) {
                     flippablePieces -= tempFlip;
                     return false;
                 } else if (state.gameState[a][b] == opponentColor) {
@@ -391,6 +402,9 @@ public class Action {
                 } else if (state.gameState[a][b] == currentColor) {
                     // System.out.println("-------NW has Flippable pieces: " + tempFlip);
                     return true;
+                } else if (state.gameState[a][b] == '-') {
+                    flippablePieces -= tempFlip;
+                    return false;
                 } else {
                     // System.out.println("NW got a problem");
                     flippablePieces -= tempFlip;
@@ -417,7 +431,7 @@ public class Action {
             // if there's a cell of the current color again, it is a legal move
             int b = j + 2;
             for (int a = (i + 2); a < boardSize; a++) {
-                if (state.gameState[a][b] == '-') {
+                if (a > boardSize || b > boardSize) {
                     flippablePieces -= tempFlip;
                     return false;
                 } else if (state.gameState[a][b] == opponentColor) {
@@ -427,6 +441,9 @@ public class Action {
                 } else if (state.gameState[a][b] == currentColor) {
                     // System.out.println("-------NW has Flippable pieces: " + tempFlip);
                     return true;
+                } else if (state.gameState[a][b] == '-') {
+                    flippablePieces -= tempFlip;
+                    return false;
                 } else {
                     // System.out.println("SE reaches the boarder, without finding curCOlor");
                     flippablePieces -= tempFlip;
@@ -453,7 +470,7 @@ public class Action {
             // if there's a cell of the current color again, it is a legal move
             int b = j + 2;
             for (int a = (i - 2); a > 0; a--) {
-                if (state.gameState[a][b] == '-') {
+                if (a < 0 || b > boardSize) {
                     flippablePieces -= tempFlip;
                     return false;
                 } else if (state.gameState[a][b] == opponentColor) {
@@ -463,6 +480,9 @@ public class Action {
                 } else if (state.gameState[a][b] == currentColor) {
                     // System.out.println("-------NW has Flippable pieces: " + tempFlip);
                     return true;
+                } else if (state.gameState[a][b] == '-') {
+                    flippablePieces -= tempFlip;
+                    return false;
                 } else {
                     // System.out.println("SE reaches the boarder, without finding curCOlor");
                     flippablePieces -= tempFlip;
@@ -491,8 +511,9 @@ public class Action {
             // if there's a cell of the current color again, it is a legal move
             int b = j - 2;
             for (int a = (i + 2); a < boardSize; a++) {
-                if (state.gameState[a][b] == '-') {
-                    flippablePieces -= 1;
+                if (a > boardSize || b < 0) {
+                    System.out.println("a<0 or b<0::: a: " + a + " b: " + b);
+                    flippablePieces -= tempFlip;
                     return false;
                 } else if (state.gameState[a][b] == opponentColor) {
                     flippable[flippablePieces] = convertToMove(a, b);
@@ -501,6 +522,9 @@ public class Action {
                 } else if (state.gameState[a][b] == currentColor) {
                     // System.out.println("-------NW has Flippable pieces: " + tempFlip);
                     return true;
+                } else if (state.gameState[a][b] == '-') {
+                    flippablePieces -= tempFlip;
+                    return false;
                 } else {
                     // System.out.println("SE reaches the boarder, without finding curCOlor");
                     flippablePieces -= tempFlip;
