@@ -149,12 +149,17 @@ public class State {
     }
 
     public State updateState(State s, char curPlayer, String move) {
-        Action a = new Action(s, curPlayer);
+        Action a = new Action();
 
         // gameState[getRow(move.charAt(1))][getCol(Character.getNumericValue(move.charAt(0)))]
         // = curPlayer;
         // printState(gameState);
-        s = a.flip(s, move, curPlayer);
+        if (a.isPossibleAction(s, curPlayer, move)) {
+            s = a.flip(s, move, curPlayer);
+        } else {
+            System.out.println(move + " is not possible");
+        }
+
         return s;
     }
 }

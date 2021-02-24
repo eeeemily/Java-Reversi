@@ -26,38 +26,42 @@ public class Main {
         State b = new State(size, player);
         b.printState(b.gameState);
 
-        Action move = new Action(b, player); // initialize player action
+        Action move = new Action(); // get board info?
         // Action move = new Action(b, b.ai);
         Game g = new Game(); // initialize game
 
-        if ((b.ai == 'x') && (move.numActions != 0)) { //AI MOVES FIRST
-            // g.minimax_decision(b);
-        } else { //PLAYER MOVES FIRST
-            // while (move.hasPossibleAction(b, player) == true){
+        // if ((b.ai == 'x') && (move.numActions != 0)) { // AI MOVES FIRST
+        // // g.minimax_decision(b);
+        // } else { // PLAYER MOVES FIRST
+        while (move.hasPossibleAction(b, player) == true) {
+            System.out.println("-----------------------------");
+            System.out.print(player + " move: (? for help): ");
+            String location = scan.next();
+            if (location.equals("?")) {
+                move.printActions(b, player);
                 System.out.println("-----------------------------");
-                System.out.print("Your move (? for help): ");
-                String location = scan.next();
-            // if (location.equals("?")) {
-                move.printActions();
-                System.out.println("-----------------------------");
-            // } else {
+            } else {
                 // 1. x
-                System.out.println("location is " + move.isPossibleAction(location));
-                System.out.println("location: " + location);
-                while (!move.isPossibleAction(location)) {
-                    // System.out.println("please enter one of the possible moves: ");
+                // System.out.println("1.location entered: " + location + " is legal(T/F)? "
+                // + move.isPossibleAction(b, player, location));
+                // System.out.println("location:);
+                while (!move.isPossibleAction(b, player, location)) {
+                    System.out.println("please enter one of the possible moves: ");
                     // System.out.println("move is possible?: " + move.isPossibleAction(location));
-                    move.printActions();
+                    move.printActions(b, player);
                     location = scan.next();
                 }
-                b = b.updateState(b, 'x', location);
-                System.out.println("-----------------RANDOM AGENT PLAYING----------------");
-                g.RandomAgent(b, 'o');
-            // }
-            
+                // if(move.isPossibleAction(b, curPlayer, move))
+                b = b.updateState(b, player, location);
+                // System.out.println("-----------------RANDOM AGENT PLAYING----------------");
+                // g.RandomAgent(b, 'o');
+
             }
+            player = (player == 'x') ? 'o' : 'x';
+
         }
+        // }
 
         // scan.close();
     }
-
+}
