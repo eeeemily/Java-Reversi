@@ -1,6 +1,10 @@
+import java.util.ArrayList;
+
 public class Action {
     State state;
     int boardSize;
+    ArrayList<String> FlipAL;
+    ArrayList<String> flipN, flipS, flipE, flipW, flipNW, flipNE, flipSW, flipSE;
     // char [][] possibleActions;
     // int[] possibleActionsI; // can be removed?
     // int[] possibleActionsJ;
@@ -21,6 +25,17 @@ public class Action {
     public Action() {
         possibleActionsString = new String[64];
         numActions = 0;
+        flipN = new ArrayList<String>();
+        flipS = new ArrayList<String>();
+        flipE = new ArrayList<String>();
+        flipW = new ArrayList<String>();
+        flipNW = new ArrayList<String>();
+        flipNE = new ArrayList<String>();
+        flipSW = new ArrayList<String>();
+        flipSE = new ArrayList<String>();
+        // numFlips = new int[64]; // how many pieces can one move flip
+        // boardSize = state.getSize();
+        // north = west = south = east = nw = ne = sw = se = 0;
 
         // // for func flip
         flippable = new String[1000]; // put all flippeable pieces in a array
@@ -127,7 +142,7 @@ public class Action {
         boardSize = s.getSize();
         s = addMove(s, move, curPlayer);
         // for func flip
-
+        FlipAL = new ArrayList<String>();
         currentColor = curPlayer;
         opponentColor = (curPlayer == 'x') ? 'o' : 'x';
 
@@ -156,16 +171,8 @@ public class Action {
          */
         flippable = new String[64]; // put all flippeable pieces in a array
         flippablePieces = 0; // count how many pieces can be flipped
-        North(state, move);
-        South(state, move);
-        West(state, move);
-        East(state, move);
-        NW(state, move);
-        NE(state, move);
-        SW(state, move);
-        SE(state, move);
         return North(state, move) || South(state, move) || West(state, move) || East(state, move) || NW(state, move)
-        || NE(state, move) || SW(state, move) || SE(state, move);        
+                || NE(state, move) || SW(state, move) || SE(state, move);
     }
 
     public boolean North(State state, String move) {
@@ -182,6 +189,7 @@ public class Action {
             flippable[flippablePieces] = convertToMove((i - 1), j);
             int tempFlip = 1;
             flippablePieces += tempFlip;
+            flipN.add(convertToMove((i - 1), j));
             for (int a = (i - 2); a >= 0; a--) {
                 if (a < 0 || j < 0) {
                     flippablePieces -= tempFlip;
@@ -190,6 +198,7 @@ public class Action {
                     flippable[flippablePieces] = convertToMove(a, j);
                     flippablePieces += 1;
                     tempFlip += 1;
+                    flipN.add(convertToMove(a, j));
                 } else if (state.gameState[a][j] == currentColor) {
                     return true;
                 } else if (state.gameState[a][j] == '-') {
@@ -215,6 +224,8 @@ public class Action {
             flippable[flippablePieces] = convertToMove(i + 1, j);
             int tempFlip = 1;
             flippablePieces += tempFlip;
+            flipS.add(convertToMove(i + 1, j));
+            // if there's a cell of the current color again, it is a legal move
             for (int a = (i + 2); a < boardSize; a++) {
                 if (a >= boardSize || j >= boardSize) {
                     flippablePieces -= tempFlip;
@@ -223,6 +234,7 @@ public class Action {
                     flippable[flippablePieces] = convertToMove(a, j);
                     flippablePieces += 1;
                     tempFlip += 1;
+                    flipS.add(convertToMove(a, j));
                 } else if (state.gameState[a][j] == currentColor) {
                     return true;
                 } else if (state.gameState[a][j] == '-') {
@@ -248,6 +260,7 @@ public class Action {
             flippable[flippablePieces] = convertToMove(i, j - 1);
             int tempFlip = 1;
             flippablePieces += tempFlip;
+            flipW.add(convertToMove(i, j - 1));
             for (int a = (j - 2); a > 0; a--) {
                 if (i < 0 || a < 0) {
                     flippablePieces -= tempFlip;
@@ -256,6 +269,7 @@ public class Action {
                     flippable[flippablePieces] = convertToMove(i, a);
                     flippablePieces += 1;
                     tempFlip += 1;
+                    flipW.add(convertToMove(i, a));
                 } else if (state.gameState[i][a] == currentColor) {
                     return true;
                 } else if (state.gameState[i][a] == '-') {
@@ -281,6 +295,7 @@ public class Action {
             flippable[flippablePieces] = convertToMove(i, j + 1);
             int tempFlip = 1;
             flippablePieces += tempFlip;
+            flipE.add(convertToMove(i, j + 1));
             for (int a = (j + 2); a < boardSize; a++) {
                 if (i >= boardSize || a >= boardSize) {
                     flippablePieces -= tempFlip;
@@ -289,6 +304,7 @@ public class Action {
                     flippable[flippablePieces] = convertToMove(i, a);
                     flippablePieces += 1;
                     tempFlip += 1;
+                    flipE.add(convertToMove(i, a));
                 } else if (state.gameState[i][a] == currentColor) {
                     return true;
                 } else if (state.gameState[i][a] == '-') {
@@ -314,6 +330,8 @@ public class Action {
             flippable[flippablePieces] = convertToMove(i - 1, j - 1);
             int tempFlip = 1;
             flippablePieces += tempFlip;
+            flipNW.add(convertToMove(i - 1, j - 1));
+            // if there's a cell of the current color again, it is a legal move
             int b = j - 2;
 
             for (int a = (i - 2); a >= 0; a--) {
@@ -324,6 +342,7 @@ public class Action {
                     flippable[flippablePieces] = convertToMove(a, b);
                     flippablePieces += 1;
                     tempFlip += 1;
+                    flipNW.add(convertToMove(a, b));
                 } else if (state.gameState[a][b] == currentColor) {
                     return true;
                 } else if (state.gameState[a][b] == '-') {
@@ -349,6 +368,8 @@ public class Action {
             flippable[flippablePieces] = convertToMove(i + 1, j + 1);
             int tempFlip = 1;
             flippablePieces += tempFlip;
+            flipSE.add("" + convertToMove(i + 1, j + 1));
+            // if there's a cell of the current color again, it is a legal move
             int b = j + 2;
             for (int a = (i + 2); a < boardSize; a++) {
                 if (a >= boardSize || b >= boardSize) {
@@ -358,6 +379,7 @@ public class Action {
                     flippable[flippablePieces] = convertToMove(a, b);
                     flippablePieces += 1;
                     tempFlip += 1;
+                    flipSE.add(convertToMove(a, b));
                 } else if (state.gameState[a][b] == currentColor) {
                     return true;
                 } else if (state.gameState[a][b] == '-') {
@@ -383,6 +405,8 @@ public class Action {
             flippable[flippablePieces] = convertToMove(i - 1, j + 1);
             int tempFlip = 1;
             flippablePieces += tempFlip;
+            flipNE.add(convertToMove(i - 1, j + 1));
+            // if there's a cell of the current color again, it is a legal move
             int b = j + 2;
             for (int a = (i - 2); a > 0; a--) {
                 if (a < 0 || b >= boardSize) {
@@ -392,6 +416,7 @@ public class Action {
                     flippable[flippablePieces] = convertToMove(a, b);
                     flippablePieces += 1;
                     tempFlip += 1;
+                    flipNE.add(convertToMove(a, b));
                 } else if (state.gameState[a][b] == currentColor) {
                     return true;
                 } else if (state.gameState[a][b] == '-') {
@@ -419,6 +444,8 @@ public class Action {
             flippable[flippablePieces] = convertToMove(i + 1, j - 1);
             int tempFlip = 1;
             flippablePieces += tempFlip;
+            flipSW.add(convertToMove(i + 1, j - 1));
+            // if there's a cell of the current color again, it is a legal move
             int b = j - 2;
             for (int a = (i + 2); a < boardSize; a++) {
                 if (a >= boardSize || b < 0) {
@@ -428,6 +455,7 @@ public class Action {
                     flippable[flippablePieces] = convertToMove(a, b);
                     flippablePieces += 1;
                     tempFlip += 1;
+                    flipSW.add(convertToMove(a, b));
                 } else if (state.gameState[a][b] == currentColor) {
                     return true;
                 } else if (state.gameState[a][b] == '-') {
