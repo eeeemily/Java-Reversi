@@ -39,9 +39,12 @@ public class Game {
             int v = Integer.MIN_VALUE;
             String best = null;
             // a.getAction(state, max_value(state)); // gets the best action
+            System.out.println("---------------STEP 1-------------------");
+            // System.out.println("NUM OF ACTIONS: " + temp_action.numActions);
             for (int i = 0; i< temp_action.numActions; i++){ //for each possible action 
                 State result_state = Result(state, temp_action.possibleActionsString[i]);
                 int possible = min_value(result_state);
+                System.out.println("POSSIBLE: " + possible);
                 // v = Math.max(v, min_value(result_state));
                 if (possible > v){
                     v = possible;
@@ -59,45 +62,46 @@ public class Game {
     }
 
     public int max_value(State state){
-        // temp_action.setState(state);
-        // temp_action.setWhoseTurn(ai_turn);
+        temp_action.setState(state);
+        temp_action.setWhoseTurn(ai_turn);
 
-        System.out.println("**********STEP1111111111");
             if (terminalTest(state)) {
                 return utility(state);
             }
+            System.out.println("---------------STEP 7-------------------");
             int v = Integer.MIN_VALUE;
             state.setPlayer(ai_turn);// for RESULT function to know which piece to put
             for (int i = 0; i< temp_action.numActions; i++){ //for each possible action 
-                System.out.println("**********STEP222222222");
+                System.out.println("---------------STEP 8-------------------");
                 v = Math.max(v, min_value(Result(state, temp_action.possibleActionsString[i])));
             } 
             return v;
     }
     
     public State Result(State s, String move) {
+        System.out.println("---------------STEP 2-------------------");
         s.updateState(s, ai_turn, move);
-        System.out.println("**********STEP3333333");
         return s;
     }
-    public State aiResult(State s, String move) {
+    public State plResult(State s, String move) {
+        System.out.println("---------------STEP 6-------------------");
         s.updateState(s, player_turn, move);
-        System.out.println("**********STEP3333333");
         return s;
     }
 
     public int min_value(State s){
-        // temp_action.setState(s);
-        // temp_action.setWhoseTurn(s.getPlayer());
+        temp_action.setState(s);
+        temp_action.setWhoseTurn(s.getPlayer());
 
         if (terminalTest(s)) {
             return utility(s);
         }
         int v = Integer.MAX_VALUE;
         s.setPlayer(player_turn); // for RESULT function to know which piece to put
+        System.out.println("---------------STEP 4-------------------");
         for (int i = 0; i< temp_action.numActions; i++){ //for each possible action 
-            System.out.println("**********STEP4444444444");
-            v = Math.min(v, max_value(aiResult(s, temp_action.possibleActionsString[i])));
+            System.out.println("---------------STEP 5-------------------");
+            v = Math.min(v, max_value(plResult(s, temp_action.possibleActionsString[i])));
             // v = Math.min(v, max_value(Result(s, a)));
         }
         return v;
