@@ -1,13 +1,13 @@
 public class State {
     int size;
-    static char player;
+    char player;
     char ai;
     char[][] gameState;
     boolean aiTurn; // true = ai's turn, false = human's turn
 
     public State(int size, char player) { // Emily: maybe we don't need to take in player? we will just parse in value?
         this.size = size;
-        State.player = player;
+        this.player = player;
 
         if (player == 'x') {
             this.ai = 'o';
@@ -65,7 +65,7 @@ public class State {
     }
 
     public void setPlayer(char player) { // will never need to set player
-        State.player = player;
+        this.player = player;
     }
 
     public static char getCharRow(int row) {
@@ -161,5 +161,19 @@ public class State {
         }
 
         return s;
+    }
+
+    public boolean compareState(State a, State b) {
+        System.out.println("Comparing States");
+        if (a.getSize() != b.getSize())
+            return false;
+        for (int i = 0; i < a.getSize(); i++) {
+            for (int j = 0; j < a.getSize(); j++) {
+                if (a.gameState[i][j] != b.gameState[i][j]) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }

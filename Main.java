@@ -1,12 +1,17 @@
 import java.util.*;
 
 public class Main {
+    static char player;
+    static char aiColor;
+    static int boardChoice;
+    static int size;
+
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
         System.out.println("Choose your game: \n 1. Small 4x4 Reversi \n 2. Standard 8x8 Reversi");
         // int boardChoice = scan.nextInt();
-        int boardChoice = 1; // for testing
-        int size;
+        boardChoice = 1; // for testing
+
         if (boardChoice == 1) {
             size = 4;
         } else {
@@ -20,7 +25,9 @@ public class Main {
         /* each choice lead to a different opponent */
         System.out.println("Do you want to play DARK (x) or LIGHT (o)?");
         // char player = scan.next().charAt(0);
-        char player = 'x'; // for testing
+        char turn = 'x';
+        player = 'x'; // for testing
+        aiColor = (player != 'x') ? 'x' : 'o';
 
         /* prints board */
         State b = new State(size, player);
@@ -28,57 +35,38 @@ public class Main {
 
         Action move = new Action(); // get board info?
         // Action move = new Action(b, b.ai);
-        Game g = new Game(); // initialize game
+        Game g = new Game(aiColor); // initialize game
 
         // if ((b.ai == 'x') && (move.numActions != 0)) { // AI MOVES FIRST
         // // g.minimax_decision(b);
         // } else { // PLAYER MOVES FIRST
-        while (move.hasPossibleAction(b, player) == true) {
+        while (move.hasPossibleAction(b, turn) == true) {
             System.out.println("-----------------------------");
             System.out.print(player + " move: (? for help): ");
             String location;
-            if (player == 'x'){
+            if (turn == player) { // if it's player's turn
                 location = scan.next();
-            }else{
-                // location = g.RandomAgent(move, b, 'o');
-                location = g.minimax_decision(move, b, 'o');
-            }
-            
-            if (location == null){
-                System.out.println("No possible moves for " + player);
-            }
-
-            if (location.equals("?")) {
-                move.printActions(b, player);
+                if (location.equals("?"))
+                    move.printActions(b, player);
                 while (!move.isPossibleAction(b, player, location)) {
                     System.out.println("please enter one of the possible moves: ");
                     // System.out.println("move is possible?: " + move.isPossibleAction(location));
                     move.printActions(b, player);
                     location = scan.next();
                 }
-                // if(move.isPossibleAction(b, curPlayer, move))
-                b = b.updateState(b, player, location);
             } else {
-                // System.out.println("1.location entered: " + location + " is legal(T/F)? "
-                // + move.isPossibleAction(b, player, location));
-                // System.out.println("location:);
-                while (!move.isPossibleAction(b, player, location)) {
-                    System.out.println("please enter one of the possible moves: ");
-                    // System.out.println("move is possible?: " + move.isPossibleAction(location));
-                    move.printActions(b, player);
-                    location = scan.next();
+                // location = g.RandomAgent(move, b, 'o');
+                location = g.minimax_decision(b, turn);
+                if (location == null) {
+                    System.out.println("No possible moves for " + player);
                 }
-                // if(move.isPossibleAction(b, curPlayer, move))
-                b = b.updateState(b, player, location);
-                // System.out.println("-----------------RANDOM AGENT PLAYING----------------");
-                // g.RandomAgent(b, 'o');
-
             }
-            player = (player == 'x') ? 'o' : 'x';
-
+            b = b.updateState(b, player, location);
+            turn = (turn == 'x') ? 'o' : 'x';
         }
-        // }
+        scan.close();
 
-        // scan.close();
     }
+    // }
+
 }
