@@ -157,7 +157,7 @@ public class State {
         if (a.isPossibleAction(s, curPlayer, move)) {
             s = a.flip(s, move, curPlayer);
         } else {
-            System.out.println(move + " is not possible");
+            // System.out.println(move + " is not possible");
         }
 
         return s;

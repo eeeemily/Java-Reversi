@@ -10,7 +10,7 @@ public class Main {
         Scanner scan = new Scanner(System.in);
         System.out.println("Choose your game: \n 1. Small 4x4 Reversi \n 2. Standard 8x8 Reversi");
         // int boardChoice = scan.nextInt();
-        boardChoice = 1; // for testing
+        boardChoice = 2; // for testing
 
         if (boardChoice == 1) {
             size = 4;
@@ -35,7 +35,7 @@ public class Main {
 
         Action move = new Action(); // get board info?
         // Action move = new Action(b, b.ai);
-        Game g = new Game(aiColor); // initialize game
+        Game g = new Game(); // initialize game
 
         // if ((b.ai == 'x') && (move.numActions != 0)) { // AI MOVES FIRST
         // // g.minimax_decision(b);
@@ -44,6 +44,7 @@ public class Main {
             System.out.println("-----------------------------");
             System.out.print(player + " move: (? for help): ");
             String location;
+
             if (turn == player) { // if it's player's turn
                 location = scan.next();
                 if (location.equals("?"))
@@ -54,14 +55,22 @@ public class Main {
                     move.printActions(b, player);
                     location = scan.next();
                 }
+                b = b.updateState(b, turn, location);
+
             } else {
                 // location = g.RandomAgent(move, b, 'o');
-                location = g.minimax_decision(b, turn);
+                State copy = move.cloneBoard(b);
+                location = g.minimax_decision(move, copy, aiColor);
                 if (location == null) {
-                    System.out.println("No possible moves for " + player);
+                    System.out.println("Main: Line 61: No possible moves for " + aiColor);
+                } else {
+                    System.out.println("location is:" + location);
                 }
+                System.out.println("print the board");
+                b = b.updateState(b, aiColor, location);
+                b.printState(b.gameState);
+
             }
-            b = b.updateState(b, player, location);
             turn = (turn == 'x') ? 'o' : 'x';
         }
         scan.close();

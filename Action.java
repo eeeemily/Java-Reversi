@@ -72,6 +72,19 @@ public class Action {
 
     }
 
+    public State cloneBoard(State target) {
+        State clone = new State(target.getSize(), target.getPlayer());
+        for (int i = 0; i < target.getSize(); i++) {
+            for (int j = 0; j < target.getSize(); j++) {
+                clone.gameState[i][j] = target.gameState[i][j];
+            }
+        }
+        System.out.println("Cloning:");
+        clone.printState(clone.gameState);
+        return clone;
+
+    }
+
     public String[] findActions(State state, char curPlayer) {
         // System.out.println("debugging: findActions?");
         possibleActionsString = new String[64];
@@ -96,10 +109,6 @@ public class Action {
             }
         }
         return possibleActionsString;
-    }
-
-    public int getNumActions(State state, char curPlayer) {
-        return findActions(state, curPlayer).length;
     }
 
     public State getState() {
@@ -145,12 +154,18 @@ public class Action {
         findActions(s, curPlayer);
         for (int i = 0; i < numActions; i++) {
             if ((possibleActionsString[i]).equals(move)) {
-                System.out.println(move + " is a possible move at current state for Player " + curPlayer);
+                // System.out.println(move + " is a possible move at current state for Player "
+                // + curPlayer);
                 return true;
             }
         }
-        System.out.println(move + " is a NOT possible move at current state for Player " + curPlayer);
+        // System.out.println(move + " is a NOT possible move at current state for
+        // Player " + curPlayer);
         return false;
+    }
+
+    public int getNumActions(State state, char curPlayer) {
+        return findActions(state, curPlayer).length;
     }
 
     public boolean hasPossibleAction(State s, char curPlayer) {
@@ -187,7 +202,7 @@ public class Action {
     public State addMove(State s, String move, char CurPlayer) {
         int[] m = convertToBoard(move);
         s.gameState[m[0]][m[1]] = CurPlayer;
-        System.out.println("adding a Move: " + move);
+        // System.out.println("adding a Move: " + move);
         return s;
     }
 
@@ -199,7 +214,7 @@ public class Action {
         currentColor = curPlayer;
         opponentColor = (curPlayer == 'x') ? 'o' : 'x';
 
-        System.out.println("******** Flip Function***********");
+        // System.out.println("******** Flip Function***********");
         // System.out.println("Original State + move: ");
         // s.printState(s.gameState);
 
@@ -232,6 +247,7 @@ public class Action {
         NE(s, move);
         SW(s, move);
         SE(s, move);
+
         if (flipN.size() > 0 && North(s, move)) {
             for (String i : flipN) {
                 int[] convertIJ = convertToBoard(i);
@@ -282,9 +298,9 @@ public class Action {
         }
         // System.out.println("count:" + count);
         // System.out.println("Flipped State: ");
-        s.printState(s.gameState);
-        System.out.println("flippablePieces is crazy: " + flippablePieces);
-        System.out.println("******** End of Flip Function***********");
+        // s.printState(s.gameState);
+        // System.out.println("flippablePieces: " + flippablePieces);
+        // System.out.println("******** End of Flip Function***********");
         return s;
     }
 
